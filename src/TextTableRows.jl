@@ -1,5 +1,6 @@
 module TextTableRows
 
-# package code goes here
+include("utilities.jl")
+include("summaries.jl")
 
 end # module
