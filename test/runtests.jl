@@ -1,11 +1,12 @@
 using TextTableRows
 using Base.Test
 
-import TextTableRows: perc
+import TextTableRows: perc, count_and_perc
 
 @testset "perc" begin
     @test perc(pi) == "314.2%"
     @test perc(1/3) == "33.3%"
+    @test count_and_perc(10, 20) == "10  (50.0%)"
 end
 
 @testset "Extrema" begin
@@ -37,4 +38,24 @@ end
     bar => 30  (75.0%)
     foo => 10  (25.0%)
 """
+end
+
+@testset "MultipleSummaries" begin
+    s = MultipleSummaries((UniqueStrings(), Extrema(Int)))
+    s1 = UniqueStrings()
+    s2 = Extrema(Int)
+    @test length(s) == 0
+    @test isempty(s)
+    strings1 = ["foo", "bar", "baz"]
+    for _ in 1:rand(100:200)
+        x = rand(strings1)
+        push!(s, 1, x)
+        push!(s1, x)
+    end
+    # for _ in 1:rand(100:200)
+    #     x = rand(1:10000)
+    #     push!(s, 2, x)
+    #     push!(s2, x)
+    # end
+    # @test length(s) == length(s1) + length(s2)
 end

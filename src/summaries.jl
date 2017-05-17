@@ -2,7 +2,7 @@ using ArgCheck
 
 import Base: length, push!, show, minimum, maximum, extrema, isempty
 
-export Extrema, UniqueStrings
+export Extrema, UniqueStrings, MultipleSummaries
 
 mutable struct Extrema{T, S}
     count::T
@@ -72,6 +72,25 @@ function show{T}(io::IO, s::UniqueStrings{T})
     len = length(s)
     println(io, "UniqueStrings{$(T)}: $(len) values")
     for (string, count) in sort(collect(s.dict), by = last, rev = true)
-        println(io, "    $(string) => $(count)  ($(perc(count/len)))")
+        println(io, "    $(string) => ", count_and_perc(count, len))
+    end
+end
+
+struct MultipleSummaries{T <: Tuple}
+    summaries::T
+end
+
+push!(s::MultipleSummaries, index::Int, x) = push!(s.summaries[index], x)
+
+length(s::MultipleSummaries) = sum(length, s.summaries)
+
+isempty(s::MultipleSummaries) = all(isempty, s.summaries)
+
+function show(io::IO, s::MultipleSummaries)
+    len = length(s)
+    println(io, "MultipleSummaries{$(T)}: $(len) values")
+    for summary in s.summaries
+        count = length(summary)
+        println(io, "    ", count_and_perc(count, len), " in ", summary)
     end
 end
