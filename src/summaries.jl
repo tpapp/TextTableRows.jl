@@ -14,7 +14,7 @@ Extrema(T,S) = Extrema{T,S}(zero(T), typemax(S), typemin(S))
 
 Extrema(S) = Extrema(Int, S)
 
-function push!{T,S}(s::Extrema{T,S}, x::S)
+function push!(s::Extrema{T,S}, x::S) where {T,S}
     s.count += one(T)
     s.min = min(s.min, x)
     s.max = max(s.max, x)
@@ -40,7 +40,7 @@ function extrema(s::Extrema)
     (s.min, s.max)
 end
 
-function show{T,S}(io::IO, s::Extrema{T,S})
+function show(io::IO, s::Extrema{T,S}) where {T,S}
     print(io, "Extrema{$(T),$(S)}: $(s.count) values")
     if s.count > 0
         print(io, ", $(s.min)..$(s.max)")
@@ -55,7 +55,7 @@ UniqueStrings(T) = UniqueStrings(Dict{String,T}())
 
 UniqueStrings() = UniqueStrings(Int)
 
-function push!{T}(s::UniqueStrings{T}, x::AbstractString)
+function push!(s::UniqueStrings{T}, x::AbstractString) where T
     if haskey(s.dict, x)
         s.dict[x] += one(T)
     else
@@ -68,7 +68,7 @@ length(s::UniqueStrings) = sum(values(s.dict))
 
 isempty(s::UniqueStrings) = isempty(s.dict)
 
-function show{T}(io::IO, s::UniqueStrings{T})
+function show(io::IO, s::UniqueStrings{T}) where T
     len = length(s)
     println(io, "UniqueStrings{$(T)}: $(len) values")
     for (string, count) in sort(collect(s.dict), by = last, rev = true)
